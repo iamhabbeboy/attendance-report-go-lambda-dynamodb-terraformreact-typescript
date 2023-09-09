@@ -19,7 +19,8 @@ func NewRoutes() *Router {
 func (re *Router) Endpoints() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		JSON(w, map[string]string{"status": "All is well here"})
+		httpResponse := HttpResponse{}
+		httpResponse.JSON(w, map[string]string{"status": "All is well here"}, 200)
 	})
 	r.HandleFunc("/api/reports", re.report.Index)
 	r.HandleFunc("/api/export", re.report.Export).Methods("GET")

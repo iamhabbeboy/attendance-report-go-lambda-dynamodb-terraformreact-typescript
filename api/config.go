@@ -1,28 +1,33 @@
 package main
 
-import (
-	"encoding/json"
-	"log"
-	"net/http"
-)
-
 const (
-	GetMethod             = "GET"
-	PostMethod            = "POST"
 	DefaultDBName         = "attendance"
 	DefaultDatabaseDriver = "dynamoDb"
 )
 
+// var AttendanceKeys []string
+
 var DB interface{}
 
-func JSON(w http.ResponseWriter, data interface{}) {
-	err := json.NewEncoder(w).Encode(data)
-	if err != nil {
-		_, err = w.Write([]byte("error occured with data"))
-		if err != nil {
-			log.Fatal(err.Error())
-			return
-		}
-		return
+// func JsonDecode() (interface{}, error){
+// 	decoder := json.NewDecoder(r.Body)
+// 	if err := decoder.Decode(&requestBody); err != nil {
+// 		String()
+// 		return nil,
+// 	}
+// }
+
+func HasDefaultKey(key string) bool {
+	attendanceKeys := []string{
+		"main-auditorium",
+		"extension",
+		"overflow",
 	}
+	hasValue := false
+	for _, val := range attendanceKeys {
+		if key == val {
+			hasValue = true
+		}
+	}
+	return hasValue
 }

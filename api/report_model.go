@@ -5,15 +5,12 @@ type Category struct {
 	Value string
 }
 
-const (
-	FirstService = iota
-	SecondService
-)
-
 type Report struct {
-	ID       string `dynamo:"id" json:"id"`
-	Service  string `dynamo:"service" json:"service"`
-	Category []Category
+	ID      string `dynamo:"id" json:"id"`
+	Service int    `dynamo:"service" json:"service"`
+	// Category []Category `dynamo:"category" json:"category"`
+	Tithe    int64 `dynamo:"tithe" json:"tithe"`
+	Offering int64 `dynamo:"offering" json:"offering"`
 }
 
 type Reporter struct{}

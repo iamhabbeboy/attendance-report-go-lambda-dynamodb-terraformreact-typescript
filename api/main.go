@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,16 +12,12 @@ import (
 )
 
 func main() {
-	database := NewDatabaseDriver(DefaultDatabaseDriver)
-	DB = database
+	if DB == nil {
+		database := NewDatabaseDriver(DefaultDatabaseDriver)
+		DB = database
+	}
 
-	const (
-		FirstService = iota + 1
-		SecondService
-	)
-
-	serv := SecondService
-	fmt.Println(serv)
+	// Seeder()
 
 	r := NewRoutes().Endpoints()
 
