@@ -1,0 +1,18 @@
+linters-settings:
+  # Configure your linters and their settings here if needed
+  # Example:
+  # golint:
+  #   min-confidence: 0.8
+  #   min-occurrences: 3
+
+linters:
+  enable:
+    - golint
+    - gosec
+    # Add other linters you want to enable
+
+lint:
+  # List of directories or packages to be linted
+  run:
+    paths:
+      - ./  # This will lint the entire project, including subfolders
