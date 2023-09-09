@@ -5,10 +5,14 @@ import (
 	"net/http"
 )
 
-type ReportHandler struct{}
+type ReportHandler struct {
+	repo ReportRepository
+}
 
 func NewReportHandler() *ReportHandler {
-	return &ReportHandler{}
+	return &ReportHandler{
+		repo: *NewReportRepository(),
+	}
 }
 
 func (re *ReportHandler) Index(w http.ResponseWriter, r *http.Request) {

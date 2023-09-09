@@ -7,9 +7,13 @@ import (
 )
 
 const (
-	GetMethod  = "GET"
-	PostMethod = "POST"
+	GetMethod             = "GET"
+	PostMethod            = "POST"
+	DefaultDBName         = "attendance"
+	DefaultDatabaseDriver = "dynamoDb"
 )
+
+var DB interface{}
 
 func JSON(w http.ResponseWriter, data interface{}) {
 	err := json.NewEncoder(w).Encode(data)

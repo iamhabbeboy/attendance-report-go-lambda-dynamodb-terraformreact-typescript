@@ -1,0 +1,25 @@
+service: aws
+frameworkVersion: '>=1.28.0'
+
+provider:
+  name: aws
+  runtime: go1.x
+  region: us-east-1
+functions:
+  attendance:
+    environment:
+        ENV: "prod"
+        DB_CONNECTION: "mongodb"
+        DB_NAME: "acexam"
+        MONGODB_URI: "mongodb://127.0.0.1:27017/acexam"
+        CLIENT_URL: "https://acetoptest.com"
+        JWT_SECRET_KEY: "RQJiNXJLKNiqmsv6Q6AjhTOHlqR6QUyJ"
+    handler: bin/main
+    events:
+      - http:
+          path: /
+          method: GET
+package:
+  patterns:
+    - '!*/**'
+    - bin/main
