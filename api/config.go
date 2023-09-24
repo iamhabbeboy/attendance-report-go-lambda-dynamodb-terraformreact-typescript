@@ -2,7 +2,7 @@ package main
 
 const (
 	DefaultDBName         = "attendance"
-	DefaultDatabaseDriver = "dynamoDb"
+	DefaultDatabaseDriver = "mongodb"
 )
 
 // var AttendanceKeys []string

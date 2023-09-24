@@ -4,7 +4,7 @@ import "log"
 
 type Databaser interface {
 	Store(report Report) error
-	Get(string) error
+	Get(ID string) error
 	// Delete()
 }
 
@@ -15,6 +15,7 @@ func NewDatabaseDriver(driver string) Databaser {
 	srvs := map[string]Databaser{
 		"dynamoDb":  NewDynamoDB(DefaultDBName),
 		"firestore": NewFirestore(),
+		"mongodb":   NewMongo(),
 	}
 	return srvs[driver]
 }
