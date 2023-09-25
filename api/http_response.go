@@ -9,11 +9,11 @@ import (
 type HttpResponse struct {
 }
 
-func (h *HttpResponse) String(w http.ResponseWriter, message string, code int) {
+func String(w http.ResponseWriter, message string, code int) {
 	http.Error(w, message, code)
 }
 
-func (h *HttpResponse) JSON(w http.ResponseWriter, data interface{}, code int) {
+func JSON(w http.ResponseWriter, data interface{}, code int) {
 	w.WriteHeader(code)
 	err := json.NewEncoder(w).Encode(data)
 	if err != nil {

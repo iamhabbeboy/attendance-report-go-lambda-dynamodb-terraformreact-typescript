@@ -2,7 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"io"
+	"log"
 	"net/http"
 )
 
@@ -37,16 +38,21 @@ func (re *ReportHandler) findOneOrAll(payload interface{}) error {
 	return nil
 }
 
-func (re *ReportHandler) create(w http.ResponseWriter, r *http.Request) (map[string]string, error) {
-	var requestBody Report
-	httpResponse := HttpResponse{}
-	fmt.Println("===")
-	fmt.Println(r.Body)
-	fmt.Println("===x===")
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&requestBody); err != nil {
-		httpResponse.String(w, "Invalid Request", http.StatusBadRequest)
-		return nil, nil
+func (re *ReportHandler) create(w http.ResponseWriter, r *http.Request) error {
+	var requestData Report
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Print(err.Error())
+		String(w, "Error reading request body", http.StatusBadRequest)
+		return nil
 	}
-	return map[string]string{"status": "ok"}, nil
+	err = json.Unmarshal(body, &requestData)
+	if err != nil {
+		log.Print(err.Error())
+		JSON(w, map[string]string{"message": "Error reading request body"}, http.StatusBadRequest)
+		return nil
+	}
+	res, _ := re.repo.Create(requestData)
+	JSON(w, map[string]interface{}{"data": res}, http.StatusBadRequest)
+	return nil
 }

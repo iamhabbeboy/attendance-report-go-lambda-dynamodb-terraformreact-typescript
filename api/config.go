@@ -3,11 +3,12 @@ package main
 const (
 	DefaultDBName         = "attendance"
 	DefaultDatabaseDriver = "mongodb"
+	DefaultTableName      = "reports"
 )
 
 // var AttendanceKeys []string
 
-var DB interface{}
+var DB Databaser
 
 // func JsonDecode() (interface{}, error){
 // 	decoder := json.NewDecoder(r.Body)
