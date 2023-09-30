@@ -3,7 +3,7 @@ package main
 import "log"
 
 type Databaser interface {
-	Store(report Report) error
+	Store(report Report) (interface{}, error)
 	Get(ID string) error
 	// Delete()
 }

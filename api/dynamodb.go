@@ -26,12 +26,12 @@ func NewDynamoDB(tableName string) *DynamoDbConfig {
 	}
 }
 
-func (d *DynamoDbConfig) Store(report Report) error {
+func (d *DynamoDbConfig) Store(report Report) (interface{}, error) {
 	err := d.table.Put(dynamo.AWSEncoding(report)).Run()
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return nil, nil
 }
 
 func (d *DynamoDbConfig) Get(ID string) error {

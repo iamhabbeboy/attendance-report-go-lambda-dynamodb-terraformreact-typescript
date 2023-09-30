@@ -1,15 +1,12 @@
 package main
 
 import (
-	"encoding/json"
-	"io"
 	"log"
 	"net/http"
 )
 
 type ReportHandler struct {
-	repo         ReportRepository
-	httpResponse HttpResponse
+	repo ReportRepository
 }
 
 func NewReportHandler() *ReportHandler {
@@ -40,19 +37,22 @@ func (re *ReportHandler) findOneOrAll(payload interface{}) error {
 
 func (re *ReportHandler) create(w http.ResponseWriter, r *http.Request) error {
 	var requestData Report
-	body, err := io.ReadAll(r.Body)
+	data, err := Bind(r, requestData)
 	if err != nil {
 		log.Print(err.Error())
 		String(w, "Error reading request body", http.StatusBadRequest)
 		return nil
 	}
-	err = json.Unmarshal(body, &requestData)
-	if err != nil {
-		log.Print(err.Error())
-		JSON(w, map[string]string{"message": "Error reading request body"}, http.StatusBadRequest)
-		return nil
-	}
-	res, _ := re.repo.Create(requestData)
+	report := data.(Report)
+	// var err1 []string
+	// if len(Validate(report)) > 0 {
+	// 	for _, e := range Validate(report) {
+	// 		err1 = append(err1, e.Kind().String())
+	// 	}
+	// }
+	// fmt.Println(err1)
+
+	res, _ := re.repo.Create(report)
 	JSON(w, map[string]interface{}{"data": res}, http.StatusBadRequest)
 	return nil
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"strconv"
 )
 
@@ -11,15 +10,20 @@ type Category struct {
 }
 
 type Report struct {
-	ID         string     `json:"id,omitempty" dynamo:"id" bson:"id,omitempty"`
-	Service    string     ` json:"service,omitempty" dynamo:"service" bson:"service,omitempty"`
-	Categories []Category `json:"categories,omitempty" dynamo:"categories" bson:"categories,omitempty"`
-	Offering   int64      `json:"offering,omitempty" dynamo:"offering" bson:"offering,omitempty"`
-	FirstTimer int        `json:"first_timer,omitempty" dynamo:"first_timer" bson:"first_timer,omitempty"`
+	ID         interface{} `json:"id,omitempty" dynamo:"id" bson:"id,omitempty"`
+	Service    string      ` json:"service,omitempty" dynamo:"service" bson:"service,omitempty" validate:"required,number"`
+	Categories []Category  `json:"categories,omitempty" dynamo:"categories" bson:"categories,omitempty"  validate:"required"`
+	Offering   int64       `json:"offering,omitempty" dynamo:"offering" bson:"offering,omitempty" validate:"required"`
+	FirstTimer int         `json:"first_timer,omitempty" dynamo:"first_timer" bson:"first_timer,omitempty" validate:"required"`
 }
 
 func NewReport() *Report {
 	return &Report{}
+}
+
+func (r *Report) SetID(ID interface{}) *Report {
+	r.ID = ID
+	return r
 }
 
 func (r *Report) SetService(service string) *Report {
@@ -32,7 +36,7 @@ func (r *Report) SetFirstTimer(ftimer int) *Report {
 	return r
 }
 
-func (r *Report) SetCategories(categories []Category) *Report {
+func (r *Report) Category(categories []Category) *Report {
 	r.Categories = categories
 	return r
 }
@@ -57,16 +61,12 @@ func (r *Report) SetMainAuditoriumBaby(categories []Category) *Report {
 	return r
 }
 
-func (r *Report) SetCategory(key string, val string) *Report {
-	for _, val := range r.Categories {
+func (r *Report) SetCategory(key string, categories []Category) *Report {
+	for _, val := range categories {
 		if val.Name == key {
-			log.Fatal("category already exist")
+			r.Categories = append(r.Categories, categories...)
 		}
 	}
-	r.Categories = append(r.Categories, Category{
-		Name:  key,
-		Value: val,
-	})
 
 	return r
 }

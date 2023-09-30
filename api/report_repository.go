@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type ReportRepository struct {
 	report Report
@@ -12,16 +15,15 @@ func NewReportRepository() *ReportRepository {
 	}
 }
 
-func (re *ReportRepository) Create(report Report) (*Report, error) {
-	fmt.Println(report.Categories)
+func (re *ReportRepository) Create(report Report) (interface{}, error) {
 	resp := re.report.SetFirstTimer(report.FirstTimer).
-		SetMainAuditoriumAdult(report.Categories).
+		// SetMainAuditoriumAdult(report.Categories).
 		SetMainAuditoriumBaby(report.Categories).
+		SetCategory("traffic", report.Categories).
+		// SetCategory("traffic", )
 		Build()
-
-	// r.SetCategory("traffic", "10")
-	// r.SetCategory("info_desk", "5")
-	// .Build()
-	// db := DB.Store(*r)
-	return resp, nil
+	j, _ := json.Marshal(resp)
+	fmt.Println(string(j))
+	return nil, nil
+	// return DB.Store(*resp)
 }

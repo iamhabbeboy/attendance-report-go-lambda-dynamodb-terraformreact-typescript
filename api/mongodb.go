@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"log"
 	"os"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -16,6 +17,7 @@ type Mongodber struct {
 
 func NewMongo() *Mongodber {
 	uri := os.Getenv("MONGODB_URI")
+
 	if uri == "" {
 		log.Fatal("You must set your 'MONGODB_URI' environment variable.")
 	}
@@ -23,11 +25,11 @@ func NewMongo() *Mongodber {
 	if err != nil {
 		panic(err)
 	}
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
+	// defer func() {
+	// 	if err := client.Disconnect(context.TODO()); err != nil {
+	// 		panic(err)
+	// 	}
+	// }()
 	coll := client.Database(DefaultDBName).Collection(DefaultTableName)
 
 	return &Mongodber{
@@ -35,13 +37,21 @@ func NewMongo() *Mongodber {
 	}
 }
 
-func (db *Mongodber) Store(report Report) error {
+func GetID() primitive.ObjectID {
+	return primitive.NewObjectID()
+}
+
+func (db *Mongodber) Store(report Report) (interface{}, error) {
 	result, err := db.col.InsertOne(context.TODO(), report)
 	if err != nil {
-		panic(err)
+		return primitive.ObjectID{}, err
 	}
-	fmt.Println(result)
-	return nil
+	if result.InsertedID == nil {
+		errMsg := "Error occured when inserting record"
+		log.Printf(errMsg)
+		return primitive.ObjectID{}, errors.New(errMsg)
+	}
+	return result.InsertedID, nil
 }
 
 func (a *Mongodber) Get(ID string) error {
